@@ -8,7 +8,7 @@
 ### 2. 첫 앱 실행 결과
 <img width="1916" height="1140" alt="image" src="https://github.com/user-attachments/assets/12d7be7a-9433-44ec-8409-d2d4f5fa896d" />
 
-### 3. 
+### 3. Github 저장소
 저장소 주소: https://github.com/kassu03/Flutter
 
 첫 Commit ID: e9c226b
