@@ -17,7 +17,7 @@
 | 주차 | 주제 / 내용 | 실행 증거 및 트러블슈팅 링크 |
 | :---: | :--- | :---: |
 | **Week 02** | Flutter 개발환경 구축 & 한글 경로 Impeller 셰이더 에러 해결 | [📄 Week02 보고서 보기](./Week2.md) |
-| **Week 03** | VSCode Agent를 사용하여 계산기 만들기 | [📄 Week02 보고서 보기](./Week3.md) |
+| **Week 03** | VSCode Agent를 사용하여 계산기 만들기 | [📄 Week03 보고서 보기](./Week3.md) |
 
 ---
 
