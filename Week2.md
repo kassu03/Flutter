@@ -1,7 +1,7 @@
 # Flutter
 플루터 과제 결과 오류 해결 과정을 기록
 
-09/09 Week2
+## 09/09 Week2
 ### 1. Flutter doctor -v 수집
 <img width="1652" height="1139" alt="image" src="https://github.com/user-attachments/assets/a3e519f5-983b-411a-aa4c-7421e9e541c5" />
 
