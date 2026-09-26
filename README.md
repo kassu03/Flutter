@@ -25,3 +25,5 @@
 - **Impeller Shader Error (`ink_sparkle.frag`):**
   - **원인:** Windows 사용자 계정명에 한글이 포함되어 셰이더 컴파일 실패.
   - **해결:** SDK 및 프로젝트 위치를 영문 경로(`C:\src\flutter`)로 이동 후 환경변수 PATH 재설정.
+
+## 4주차 개발물
