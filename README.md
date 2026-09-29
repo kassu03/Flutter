@@ -1,4 +1,4 @@
-# 📱 Flutter Class Practice & Assignments
+# 📱 Flutter Class Practice / Assignments
 
 > **2026학년도 2학기 Flutter/Dart 실습 기록 저장소**
 
