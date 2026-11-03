@@ -20,6 +20,7 @@
 | **Week 03** | VSCode Agent를 사용하여 계산기 만들기 | [📄 Week03 보고서 보기](./Week3.md) |
 | **Week 04** | VSCode Agent를 사용하여 간단한 게임 만들기 | [📄 Week04 보고서 보기](./Week4.md) |
 | **Week 05** | State를 사용하여 행동이 있는 프로젝트 만들기| [📄 Week05 보고서 보기](./Week5.md) |
+| **Week 10** | PRD 작성 및 주제 세분화| [📄 Week10 보고서 보기](./PRD.md) |
 
 ---
 
