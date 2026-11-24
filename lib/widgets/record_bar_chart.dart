@@ -18,12 +18,12 @@ class RecordBarChart extends StatelessWidget {
           SizedBox(width: 54, child: Semantics(
             label: '${labels[i]}: ${values[i] == null ? '측정 시간 부족' : '${values[i]!.toStringAsFixed(1)}$unit'}',
             child: Column(children: [
-              Text(values[i] == null ? '부족' : values[i]!.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
+              Text(values[i] == null ? '측정 부족' : values[i]!.toStringAsFixed(1), style: const TextStyle(fontSize: 11)),
               const SizedBox(height: 4),
               SizedBox(height: 100, child: Align(alignment: Alignment.bottomCenter, child:
                 values[i] == null ? const Text('—') : Container(
                   width: 20, height: 100 * (values[i]! / maximum).clamp(0, 1),
-                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(4)),
+                  decoration: BoxDecoration(color: const Color(0xFF168577), borderRadius: BorderRadius.circular(4)),
                 ))),
               const Divider(height: 1),
               const SizedBox(height: 8),

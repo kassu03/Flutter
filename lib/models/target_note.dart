@@ -3,6 +3,15 @@ import 'dart:math' as math;
 class TargetNote {
   const TargetNote(this.midi);
   final int midi;
+
+  factory TargetNote.fromFrequency(double frequency) {
+    assert(frequency > 0 && frequency.isFinite);
+    return TargetNote((69 + 12 * math.log(frequency / 440) / math.ln2).round());
+  }
+
+  String get vocalLabel =>
+      '${(midi / 12).floor() - 3}옥타브 ${koreanNames[midi % 12]} (${names[midi % 12]}${(midi / 12).floor() - 1})';
+
   static const names = [
     'C',
     'C♯',

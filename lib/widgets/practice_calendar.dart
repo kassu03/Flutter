@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PracticeCalendar extends StatelessWidget {
-  const PracticeCalendar({super.key, required this.selectedDate, required this.onSelected});
+  const PracticeCalendar({super.key, required this.selectedDate, required this.onSelected, this.recordedDates = const {}});
   final DateTime selectedDate;
+  final Set<DateTime> recordedDates;
   final ValueChanged<DateTime> onSelected;
 
   @override
@@ -12,7 +13,7 @@ class PracticeCalendar extends StatelessWidget {
     final days = DateTime(first.year, first.month + 1, 0).day;
     final cells = ((offset + days + 6) ~/ 7) * 7;
     final today = DateTime.now();
-    final primary = Theme.of(context).colorScheme.primary;
+    const primary = Color(0xFF168577);
     return Column(children: [
       Row(children: [
         IconButton(tooltip: '이전 달', onPressed: () => onSelected(DateTime(first.year, first.month - 1)), icon: const Icon(Icons.chevron_left)),
@@ -47,7 +48,11 @@ class PracticeCalendar extends StatelessWidget {
                 child: InkWell(
                   customBorder: const CircleBorder(),
                   onTap: () => onSelected(date),
-                  child: Center(child: Text('$day', style: TextStyle(color: selected ? Colors.white : null))),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text('$day', style: TextStyle(color: selected ? Colors.white : const Color(0xFF203A34))),
+                    const SizedBox(height: 2),
+                    Container(width: 4, height: 4, decoration: BoxDecoration(shape: BoxShape.circle, color: recordedDates.contains(date) ? selected ? Colors.white : primary : Colors.transparent)),
+                  ]),
                 ),
               ),
             ),

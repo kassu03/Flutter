@@ -1,12 +1,13 @@
 import 'practice_screen.dart';
+import '../models/practice_record.dart';
 import 'package:flutter/material.dart';
 
 import '../models/target_note.dart';
 import '../widgets/target_note_picker.dart';
-import '../widgets/pitch_preview.dart';
 
 class TrainingScreen extends StatefulWidget {
-  const TrainingScreen({super.key, required this.targetMidi, required this.onTargetChanged});
+  const TrainingScreen({super.key, required this.targetMidi, required this.onTargetChanged, required this.onCompleted});
+  final ValueChanged<PracticeRecord> onCompleted;
   final int targetMidi;
   final ValueChanged<int> onTargetChanged;
 
@@ -15,73 +16,60 @@ class TrainingScreen extends StatefulWidget {
 }
 
 class _TrainingScreenState extends State<TrainingScreen> {
-  final bool _busy = false;
-  final bool _running = false;
-  final String _status = '시작하면 실시간 연습 화면으로 이동해요.';
   Future<void> _toggle() async {
-    await Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PracticeScreen(targetMidi: widget.targetMidi)));
+    final record = await Navigator.of(context).push<PracticeRecord>(MaterialPageRoute<PracticeRecord>(builder: (_) => PracticeScreen(targetMidi: widget.targetMidi, onTargetChanged: widget.onTargetChanged)));
+    if (record != null) widget.onCompleted(record);
   }
 
   @override
   Widget build(BuildContext context) {
     final note = TargetNote(widget.targetMidi);
-    final theme = Theme.of(context);
-    return SafeArea(
-      child: SingleChildScrollView(
+    return ColoredBox(
+      color: const Color(0xFFF7F9F8),
+      child: SafeArea(child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const SizedBox(height: 8),
-          Text('트레이닝', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+          const Text('트레이닝', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF203A34))),
           const SizedBox(height: 8),
-          const Text('한 음에 머무르는 연습', style: TextStyle(color: Color(0xFF586761))),
+          const Text('옥타브와 목표 음을 선택하세요.', style: TextStyle(color: Color(0xFF66736E))),
+          const SizedBox(height: 28),
+          TargetNotePicker(value: widget.targetMidi, onChanged: widget.onTargetChanged),
           const SizedBox(height: 24),
-          IgnorePointer(ignoring: _running || _busy, child: TargetNotePicker(value: widget.targetMidi, onChanged: widget.onTargetChanged)),
-          const SizedBox(height: 20),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(color: const Color(0xFFE5EEE7), borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFE3E9E6)),
+              boxShadow: const [BoxShadow(color: Color(0x09203A34), blurRadius: 18, offset: Offset(0, 6))],
+            ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('이번 연습의 목표', style: TextStyle(color: Color(0xFF385B50))),
-              const SizedBox(height: 8),
-              Text(note.label, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: const Color(0xFF214E44))),
-              const SizedBox(height: 8),
-              Text('${note.frequency.toStringAsFixed(2)} Hz · 허용 범위 ±50센트'),
+              const Text('선택한 목표 음', style: TextStyle(fontSize: 13, color: Color(0xFF66736E))),
+              const SizedBox(height: 12),
+              Wrap(spacing: 12, runSpacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Text('${widget.targetMidi ~/ 12 - 3}옥타브 ${TargetNote.koreanNames[widget.targetMidi % 12]}', style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFF203A34))),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(color: const Color(0xFFE4F2EE), borderRadius: BorderRadius.circular(10)),
+                  child: Text('${TargetNote.names[widget.targetMidi % 12]}${widget.targetMidi ~/ 12 - 1}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF168577))),
+                ),
+              ]),
+              const SizedBox(height: 10),
+              Text('${note.frequency.toStringAsFixed(2)} Hz · 허용 범위 ±50센트', style: const TextStyle(fontSize: 13, color: Color(0xFF66736E))),
             ]),
           ),
-          const SizedBox(height: 24),
-          Text('내 목소리의 음높이', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          PitchPreview(targetLabel: note.label),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(20),
-            width: double.infinity,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: const Column(children: [
-              Text('앱 활성 연습 시간', style: TextStyle(color: Color(0xFF586761))),
-              SizedBox(height: 8),
-              Text('00:00', style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600)),
-              SizedBox(height: 8),
-              Text('시간 측정은 다음 단계에서 연결해요.', style: TextStyle(fontSize: 12, color: Color(0xFF586761))),
-            ]),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 28),
           SizedBox(width: double.infinity, child: FilledButton.icon(
-            onPressed: _busy ? null : _toggle,
+            style: FilledButton.styleFrom(backgroundColor: const Color(0xFF168577), minimumSize: const Size(0, 56), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+            onPressed: _toggle,
             icon: const Icon(Icons.mic_rounded),
-            label: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text(_busy ? '연결 처리 중…' : _running ? '마이크 입력 종료' : '연습 시작')),
+            label: const Text('연습 시작', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           )),
-          const SizedBox(height: 8),
-          Text(_status, style: TextStyle(fontSize: 12, height: 1.6, color: Color(0xFF586761))),
-          const SizedBox(height: 24),
-          Text('이렇게 연습해요', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          const Text('1. 편하게 낼 수 있는 목표 음을 골라요.\n2. 내 음높이를 보며 목표 범위에 맞춰요.\n3. 1분 이상 연습하면 완료할 수 있어요.', style: TextStyle(height: 1.9)),
-          const SizedBox(height: 12),
-          const Text('현재는 마이크 입력 확인 단계예요. 음높이 분석·시간 측정·파일 저장은 아직 연결 전이에요. 앱을 벗어나면 마이크 입력을 종료해요.', style: TextStyle(fontSize: 12, height: 1.7, color: Color(0xFF586761))),
+          const Center(child: Text('20초 이상 연습하면 완료할 수 있어요.', style: TextStyle(fontSize: 12, color: Color(0xFF66736E)))),
         ]),
-      ),
+      )),
     );
   }
 }

@@ -4,7 +4,7 @@ class PracticeRecord {
   PracticeRecord({required this.id, required this.startedAt, required this.completedAt,
     required this.activeMs, required this.targetMidi, required this.validMs,
     required this.inTuneMs, this.audioPath, this.toleranceCents = 50})
-      : assert(activeMs >= 60000 && activeMs <= 600000),
+      : assert(activeMs >= 20000),
         assert(validMs >= 0 && validMs <= activeMs),
         assert(inTuneMs >= 0 && inTuneMs <= validMs);
 
@@ -19,7 +19,7 @@ class PracticeRecord {
     final active = json['activeMs'] as int;
     final valid = json['validMs'] as int;
     final inTune = json['inTuneMs'] as int;
-    if (active < 60000 || active > 600000 || valid < 0 || valid > active || inTune < 0 || inTune > valid) {
+    if (active < 20000 || valid < 0 || valid > active || inTune < 0 || inTune > valid) {
       throw const FormatException('Invalid practice duration');
     }
     return PracticeRecord(

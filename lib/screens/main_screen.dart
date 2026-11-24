@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/practice_record.dart';
-import '../services/demo_records.dart';
 import '../services/record_storage.dart';
 import 'home_screen.dart';
 import 'records_screen.dart';
@@ -17,11 +16,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 1;
   int _targetMidi = 60;
-  bool _showDemo = false;
   final List<PracticeRecord> _records = [];
-  late final List<PracticeRecord> _demoRecords = createDemoRecords(DateTime.now());
   DateTime _recordDate = DateUtils.dateOnly(DateTime.now());
-  List<PracticeRecord> get _visibleRecords => _showDemo ? _demoRecords : _records;
 
   final _storage = RecordStorage();
   bool _loading = true;
@@ -63,16 +59,21 @@ class _MainScreenState extends State<MainScreen> {
         : IndexedStack(
       index: _selectedIndex,
       children: [
-        TrainingScreen(targetMidi: _targetMidi, onTargetChanged: _selectTarget),
+        TrainingScreen(targetMidi: _targetMidi, onTargetChanged: _selectTarget, onCompleted: (record) {
+          setState(() {
+            _records.removeWhere((r) => r.id == record.id);
+            _records.add(record);
+            _recordDate = record.recordDate;
+            _selectedIndex = 2;
+          });
+        }),
         HomeScreen(
-          records: _visibleRecords,
-          isDemo: _showDemo,
-          onDemoChanged: (value) => setState(() => _showDemo = value),
+          records: _records,
           onTraining: () => setState(() => _selectedIndex = 0),
           onRecords: () => setState(() => _selectedIndex = 2),
         ),
         RecordsScreen(
-          records: _visibleRecords, isDemo: _showDemo,
+          records: _records,
           selectedDate: _recordDate,
           onDateSelected: (date) => setState(() => _recordDate = date),
         ),
